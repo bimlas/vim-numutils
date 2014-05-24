@@ -1,0 +1,239 @@
+*NumUtils*                   For Vim version 7.3       Last Change: 2013.06.25
+
+                          NUMUTILS REFERENCE MANUAL~
+                        calculator with regex support
+
+======================= BimbaLaszlo(.co.nr|gmail.com) ========================
+
+Copyright: (c) 2013 by Bimba Laszlo
+           The VIM LICENSE applies to NumUtils.vim and NumUtils.txt
+           (see |copyright|) except use 'NumUtils' instead of 'Vim'
+           NO WARRANTY, EXPRESS OR IMPLIED.  USE AT-YOUR-OWN-RISK.
+
+CONTENTS
+
+    Intro ................................................... |NumUtils-intro|
+    Commands ............................................. |NumUtils-commands|
+        NumUtilsAdd ............................................ |NumUtilsAdd|
+        NumUtilsSub ............................................ |NumUtilsSub|
+        NumUtilsMul ............................................. |NumUtilMul|
+        NumUtilsDiv ............................................ |NumUtilsDiv|
+        NumUtilsCall .......................................... |NumUtilsCall|
+    Options ............................................... |NumUtils-options|
+        loaded_NumUtils .................................... |loaded_NumUtils|
+        NumUtils_format .................................... |NumUtils_format|
+        NumUtils_formatPoint .......................... |NumUtils_formatPoint|
+        NumUtils_formatZeros .......................... |NumUtils_formatZeros|
+        NumUtils_keep ........................................ |NumUtils_keep|
+
+INTRO                                                         *NumUtils-intro*
+
+    Did you ever want to manipulate a lot of data in text files? Add an offset
+    to the axes in G-code, calculate the finances, or just renumber the
+    chapters in the table of contents? With this plugin you can do the
+    calculations with regular expression support!
+
+    Please feel free to send me a mail if you have a good idea, or found a
+    bug. If you think the plugin does something else that you want, send me
+    the lines to manipulate, the task that the plugin should do and the
+    command that you used for, and i try to find and fix the bug.
+
+COMMANDS                                                   *NumUtils-commands*
+
+    *NumUtilsAdd* *NumUtilsSub* *NumUtilsMul* *NumUtilsDiv*
+
+        With the built-in commands you can do the basic stuff: addition,
+        subtraction, multiplication and division. By default the commands
+        will be called on the line where the cursor stays, but you can use
+        |:range|, |:global|, or |linewise-visual| to give a range as you do
+        when you using |:subtitute| for example.
+
+        The using of the commands are same for all:
+
+            :NumUtilsCOMMAND {valueORcolumns}[, {labels}]
+
+        The first argument is a {value} or a List of {column} numbers (see
+        below).  The {label} is a regular expression which will be used as a
+        prefix to the values which we want to modify. The default {label} is
+        '^\|\D', thus if you don't give this argument, then the command will
+        modify all of the numbers separated by non-digit characters.
+
+        For example let's increase all numbers in this line with 10, then add
+        20 to the values prefixed by the string 'Y: ': >
+
+                X: 10.5, Y: 20, Z: 30,40 - watch to the decimal points!
+
+            :NumUtilsAdd 10
+
+                X: 20.5, Y: 30, Z: 40,50 - watch to the decimal points!
+
+            :NumUtilsAdd 20, 'Y: '
+
+                X: 20.5, Y: 50, Z: 40,50 - watch to the decimal points!
+<
+        As you can see, at the first addition the number 30,40 became
+        40,50 instead of 40,40 because the default settings uses '.' as
+        decimal point. (see |NumUtils_formatPoint|)
+
+        The {labels} can be any regular expressions with some restrictions.
+        You can use the '!NUM!' pattern to define the location of the searched
+        value and ':NUM:' to match a value with the requested format set by
+        |NumUtils-options|.
+
+        For example try this after you select these lines: >
+
+                .star_10 {
+                    background: url(stars.png) no-repeat 0 0;
+                }
+
+            :NumUtilsAdd 2, 'star_!NUM!', ':NUM: !NUM!;$'
+
+                .star_12 {
+                    background: url(stars.png) no-repeat 0 2;
+                }
+<
+        There is another useful feature: >
+
+                100|20|3
+
+            :NumUtilsAdd [1,2], '\(:NUM:\)|\(:NUM:\)|!NUM!'
+
+                100|20|123
+<
+        We called the NumUtilsAdd command with {columns} instead of {value},
+        thus the command adds the values of first and second submatch to the
+        !NUM!. And here comes the restrictions:
+
+            * !NUM! can be present only once in the expression
+            * do not surround !NUM! with parenthesis (submatch)
+            * maximum 6 submatch allowed
+
+    *NumUtilsCall*
+
+        You can write your own functions if you need it. It has to return a
+        Number or Float and the definition have to be in the form:
+
+            function FUNCNAME( {args}, {NUM}, {matches} )
+
+        The {args} can be anything that you want to pass to your function. The
+        {NUM} is the value that matches to !NUM!. The {matches} is a
+        Dictionary:
+
+            {matches}.label : the actual {label}
+                     .sub   : a List of submatches like |matchlist()| returns
+
+        The command to call your function is:
+
+            :NumUtilsCall 'FUNCNAME', {args}, {labels}
+
+        For example let's calculate the C side of a triangle by the A and B
+        side using the Pythagorean theorem (a^2 + b^2 = c^2): >
+
+                a=3 b=4 c=0
+
+            function MyFunc( args, NUM, matches )
+                return sqrt(   pow( str2float(a:matches.sub[1], 2 ))
+                \            + pow( str2float(a:matches.sub[2], 2 ))
+                \          )
+            endfunction
+
+            NumUtilsCall 'MyFunc', '', 'a=\(:NUM:\) b=\(:NUM:\) c=!NUM!'
+
+                a=3 b=4 c=5
+<
+
+OPTIONS                                                     *NumUtils-options*
+
+    *loaded_NumUtils*                                 any (default: undefined)
+
+        Disables the loading therefore the possibility of using of the plugin.
+        You have to define it before the loading of the plugin (for example in
+        your .vimrc): >
+
+            let g:loaded_NumUtils = 1
+<
+
+    *NumUtils_format*                                     String (default: '')
+
+        The formating of the value returned by the {method} is done by using
+        |printf()| with "%" . NumUtils_format . "f" argument. For example if
+        you want to round the value, you should use this: >
+
+            let g:NumUtils_format = '.0'
+<
+        The argument of |printf()| will be "%.0f" and the value will be
+        rounded. For example: >
+
+            123.456 -> 123  123.654 -> 124
+<
+        If the value is longer than the format allows, the result will be
+        similar as above.
+        Here is some example with the number 123.456 and the option
+        |NumUtils_formatZeros| = 2 (don't truncte trailing zeros): >
+
+            Exactly 2 decimals will be printed, filled with
+            trailing zeros:
+
+                '.4'    -> 123.4560
+
+            The length of the number is minimum 12 characters (including the
+            integers, the decimal point and the decimals), filled with
+            leading zeros:
+
+                '012.6' -> 00123.456000
+<
+        See the help page of |printf()| for more information.
+
+    *NumUtils_formatPoint*                                 Number (default: 1)
+
+        If this option is 0, then use ',' instead of '.' as decimal point for
+        reading and writing NUMs. Do not mix the point formats in your files,
+        because one of them will be a separator! For example let see, what
+        will happen on this line (the separator is signed with an asterisk): >
+
+                1.2,3
+
+            let g:NumUtils_formatPoint = 1      Use '.' as decimal point.
+            NumUtilsAdd 4
+
+                5.2,7
+                   *
+
+            let g:NumUtils_formatPoint = 0      Use ','.
+            NumUtilsAdd 4
+
+                5.6,3
+                 *
+<
+
+    *NumUtils_formatZeros*                                 Number (default: 0)
+
+        Set it to 1 if you want to keep only one zero after the decimal point,
+        or set to any number to do not truncate any trailing zeros. When set
+        to 0, then the '.0' will be removed too. For example: >
+
+            NumUtils_formatZeros = 0      = 1      = 2
+            123.456000           123.456  123.456  123.456000
+            123.000              123      123.0    123.000
+<
+
+    *NumUtils_keep*                               Number or Float (default: 1)
+
+        It's used only when the argument is {columns}: if you want to replace
+        the !NUM! instead of modifying, then set it to 0. Let's see this
+        example: >
+
+                100|20|3
+
+            let g:NumUtils_keep = 1
+            NumUtilsAdd [1,2], '\(:NUM:\)|\(:NUM:\)|!NUM!
+
+                100|20|123
+
+            let g:NumUtils_keep = 0
+            NumUtilsAdd [1,2], '\(:NUM:\)|\(:NUM:\)|!NUM!
+
+                100|20|120
+<
+
+vim: filetype=help
