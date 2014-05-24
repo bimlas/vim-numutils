@@ -15,7 +15,7 @@ bug. If you think the plugin does something else that you want, send me
 the lines to manipulate, the task that the plugin should do and the
 command that you used for, and i try to find and fix the bug.
 
-Commands
+Examples
 --------
 
 `NumUtilsAdd`, `NumUtilsSub`, `NumUtilsMul`, `NumUtilsDiv`
