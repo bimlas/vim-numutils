@@ -2,8 +2,7 @@ NumUtils
 ========
 calculator with regex support
 
-**Please rate if you using it:**
-http://www.vim.org/scripts/script.php?script_id=4634
+*Please rate if you using it:* http://www.vim.org/scripts/script.php?script_id=4634
 
 Did you ever want to manipulate a lot of data in text files? Add an offset
 to the axes in G-code, calculate the finances, or just renumber the
@@ -28,21 +27,31 @@ when you using `:subtitute` for example.
 
 A basic usage is for example add 10 to every number prefixed by `X` on this
 line:
-```
+
+[source]
+----
     X123 Y456 Z789 X100
-```
+----
+
 To do it, call this:
-```
+
+[source]
+----
 :NumUtilsAdd 10, 'X'
-```
-... and you will get this:
-```
+----
+
+\... and you will get this:
+
+[source]
+----
     X133 Y456 Z789 X110
-```
+----
 
 Another example (add 2 to the number after `star_` and to the number after
 another number):
-```
+
+[source]
+----
     .star_10 {
         background: url(stars.png) no-repeat 0 0;
     }
@@ -52,43 +61,53 @@ another number):
     .star_12 {
         background: url(stars.png) no-repeat 0 2;
     }
-```
+----
+
 There is another useful feature (add first and second submatch to value of
-!NUM!):
-```
+_!NUM!_):
+
+[source]
+----
     100|20|3
 
 :NumUtilsAdd [1,2], '\(:NUM:\)|\(:NUM:\)|!NUM!'
 
     100|20|123
-```
+----
 
 Install
 -------
 
-**Manually:**
+*Manually:*
 
-[Download](https://github.com/BimbaLaszlo/vim-numutils/archive/master.zip)
-and unzip the subdirectories into `~/.vim`.
+https://github.com/BimbaLaszlo/vim-numutils/archive/master.zip[Download]
+and unzip the subdirectories into '~/.vim'.
 
 Don't forget to regenerate helptags:
-```
+
+[source]
+----
 :helptags ~/.vim/doc
-```
+----
 
-**[Pathogen](https://github.com/tpope/vim-pathogen):**
+*https://github.com/tpope/vim-pathogen[Pathogen]:*
 
-... into `~/.vim/bundle` (or to your specific pathogen directory).
+\... into '~/.vim/bundle' (or to your specific pathogen directory).
 
 Don't forget to regenerate helptags:
-```
+
+[source]
+----
 :Helptags
-```
+----
 
-**[Vundle](https://github.com/gmarik/Vundle.vim)**:
+*https://github.com/gmarik/Vundle.vim[Vundle]:*
 
-Add these lines to your `.vimrc` after `call vundle#rc()`:
-```
+Add these lines to your '.vimrc' after `call vundle#rc()`:
+
+[source]
+----
 Plugin 'bimbalaszlo/vim-numutils'
-```
+----
+
 Open vim again, then call `:PluginInstall`
