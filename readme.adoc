@@ -1,21 +1,21 @@
-NumUtils
-========
+= NumUtils
 calculator with regex support
 
 *Please rate if you using it:* http://www.vim.org/scripts/script.php?script_id=4634
 
+// tag::intro[]
 Did you ever want to manipulate a lot of data in text files? Add an offset
 to the axes in G-code, calculate the finances, or just renumber the
 chapters in the table of contents? With this plugin you can do the
 calculations with regular expression support!
+// end::intro[]
 
 Please feel free to send me a mail if you have a good idea, or found a
 bug. If you think the plugin does something else that you want, send me
 the lines to manipulate, the task that the plugin should do and the
 command that you used for, and i try to find and fix the bug.
 
-Examples
---------
+== Examples
 
 `NumUtilsAdd`, `NumUtilsSub`, `NumUtilsMul`, `NumUtilsDiv`
 
@@ -75,8 +75,7 @@ _!NUM!_):
     100|20|123
 ----
 
-Install
--------
+== Install
 
 *Manually:*
 
