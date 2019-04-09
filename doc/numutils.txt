@@ -1,11 +1,16 @@
-*NumUtils*                   For Vim version 7.3       Last Change: 2013.06.25
+*numutils.txt*           For Vim version 7.4        Last change: 2019. 04. 09.
 
                           NUMUTILS REFERENCE MANUAL~
                         calculator with regex support
 
-======================= BimbaLaszlo(.co.nr|gmail.com) ========================
+                    https://gitlab.com/bimlas/vim-numutils
+                              (main repository)
+                    https://github.com/bimlas/vim-numutils
+                     (mirror, please star if you like it)
 
-Copyright: (c) 2013 by Bimba Laszlo
+==============================================================================
+
+Copyright: (c) 2013 by bimlas
            The VIM LICENSE applies to NumUtils.vim and NumUtils.txt
            (see |copyright|) except use 'NumUtils' instead of 'Vim'
            NO WARRANTY, EXPRESS OR IMPLIED.  USE AT-YOUR-OWN-RISK.
