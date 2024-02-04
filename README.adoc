@@ -6,8 +6,7 @@ to the axes in G-code, calculate the finances, or just renumber the
 chapters in the table of contents? With this plugin you can do the
 calculations with regular expression support!
 
-* https://gitlab.com/bimlas/vim-numutils (main repository)
-* https://github.com/bimlas/vim-numutils (mirror, please star if you like it)
+* https://github.com/bimlas/vim-numutils (please star if you like it)
 * http://www.vim.org/scripts/script.php?script_id=4634 (please rate if you using it)
 
 Please feel free to send me a mail if you have a good idea, or found a

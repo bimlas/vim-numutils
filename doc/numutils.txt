@@ -3,10 +3,8 @@
                           NUMUTILS REFERENCE MANUAL~
                         calculator with regex support
 
-                    https://gitlab.com/bimlas/vim-numutils
-                              (main repository)
                     https://github.com/bimlas/vim-numutils
-                     (mirror, please star if you like it)
+                         (please star if you like it)
 
 ==============================================================================
 
